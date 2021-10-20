@@ -2,12 +2,14 @@ const getDb = require('../util/database').getDb;
 const mongodb = require('mongodb');
 
 class Car {
-    constructor({ id, title, imageURL, description, price }) {
-        this.id = id;
+    constructor({ title, description, numberOfRentals, image, categoryId, price, brandId }) {
         this.title = title;
-        this.imageURL = imageURL;
+        this.image = image;
         this.description = description;
         this.price = price;
+        this.brandId = brandId;
+        this.categoryId = categoryId;
+        this.numberOfRentals = numberOfRentals;
     }
 
     save() {
@@ -20,9 +22,18 @@ class Car {
         return db.collection('cars').updateOne({ _id: new mongodb.ObjectId(id) }, { $set: this });
     }
 
-    static getAll() {
+    static getAll(brandId) {
         const db = getDb();
-        return db.collection('cars').find().toArray();
+        const filters = {};
+        if (brandId) {
+            filters.brandId = brandId;
+        }
+        return db.collection('cars').find(filters).toArray();
+    }
+
+    static getById(id) {
+        const db = getDb();
+        return db.collection('cars').findOne({ _id: new mongodb.ObjectId(id) });
     }
 
     static delete(id) {
@@ -31,13 +42,5 @@ class Car {
     }
 
 }
-
-
-// static findById(id, cb){
-//     getProductsFromFile(products => {
-//         const products = products.find(p => p.id === id);
-//         cb(product);
-//     });
-// };
 
 module.exports = Car;
