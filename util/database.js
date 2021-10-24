@@ -1,11 +1,13 @@
 const mongodb = require('mongodb');
 const MongoClient = mongodb.MongoClient;
+const mongoose = require('mongoose');
 
 let _db;
 
 const mongoConnect = callback => {
 
-    MongoClient.connect('mongodb+srv://karim:karim%40123@cluster0.4kikr.mongodb.net/car_rental_system?retryWrites=true&w=majority')
+    const conStr = 'mongodb+srv://karim:karim%40123@cluster0.4kikr.mongodb.net/car_rental_system?retryWrites=true&w=majority';
+    MongoClient.connect(conStr)
         .then(client => {
             console.log('Connected to Mongo!');
             _db = client.db('');
@@ -16,6 +18,8 @@ const mongoConnect = callback => {
             console.log(err);
             throw err;
         });
+
+        mongoose.connect(conStr)
 };
 
     const getDb = () => {
